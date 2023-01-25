@@ -1,0 +1,53 @@
+<html>
+
+<head>
+	<link th:href="@{/css/bootstrap.css}" rel="stylesheet" href=../static/css/bootstrap.css />
+	<script th:src="@{/js/jquery.js}" src="../static/js/jquery.js"></script>
+	<script th:src="@{/js/bootstrap.js}" src="../static/js/bootstrap.js"></script>
+</head>
+
+<body>
+
+
+	<form method="post" role="form" th:action="@{/add-producto}" th:object="${producto}">
+		<div class="form-row align-items-center">
+			<div class="col-auto">
+				<input type="hidden" th:field="*{id}" class="form-control mb-2" id="id" placeholder="">
+				<label class="sr-only" for="descripcion">Descripcion</label>
+				<input type="text" th:field="*{descripcion}" class="form-control mb-2" id="descripcion" placeholder="">
+			</div>
+			<div class="col-auto">
+				<select th:field="*{categoria.id}">
+					<option th:each="c : ${categorias}" th:value="${c.id}" 
+					th:text="${c.categoria}"></option>
+				</select>
+
+			</div>
+			
+			<div class="dropdown">
+  <button th:field="*{categoria.id}"class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+   <select th:field="*{categoria.id}">
+					<option th:each="c : ${categorias}" th:value="${c.id}" 
+					th:text="${c.categoria}"></option>
+				</select>
+  </div>
+</div>
+			
+			
+			
+			
+
+
+
+			<div class="col-auto">
+				<button type="submit" class="btn btn-primary mb-2">Añadir</button>
+			</div>
+		</div>
+	</form>
+
+</body>
+
+</html>

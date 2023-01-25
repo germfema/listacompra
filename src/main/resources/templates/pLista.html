@@ -1,0 +1,50 @@
+<html>
+<head>
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" href=../static/css/bootstrap.css />
+    <script th:src="@{/js/jquery.js}" src="../static/js/jquery.js"></script>
+    <script th:src="@{/js/bootstrap.js}" src="../static/js/bootstrap.js"></script>
+
+</head>
+<body>
+
+
+<div class="container"> 
+<div > 
+<a class="btn btn-primary" href="/add-producto" 
+role="button">Incluir producto</a>
+</div>
+
+<div > 
+<a class="btn btn-primary" href="/register" role="button">registro</a>
+</div>
+
+<div class="container">
+    <div class="row">
+        <h1> <p th:text="#{index.saludo}"></p></p> </h1>
+    </div>
+<table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Descripcion</th>
+                <th>Categoria</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p: ${productos}">
+                <td th:text="${p.descripcion}"></td>
+                <td th:text="${p.categoria.categoria}"></td>
+               	<td >
+               	<a type="button" class="btn btn-success"
+								th:href="@{'/update-producto?id=' + ${p.id}}">Modificar</a>
+				<a type="button" class="btn btn-warning"
+								th:href="@{'/delete-producto?id=' + ${p.id}}">Eliminar</a></td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</div>
+</body>
+</html>
