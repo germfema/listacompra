@@ -20,7 +20,8 @@ public class CompraRowMapper implements RowMapper<CompraDTO>{
 		CompraDTO compra = new CompraDTO();
 		compra.setId(rs.getInt(1));
 		compra.setDescripcion(rs.getString(2));
-		compra.setCategoria(new CategoriaDTO(rs.getInt(3)));
+		compra.setCategoria(new CategoriaDTO(rs.getInt(3),rs.getString(4)));
+		compra.setImagenUrl(rs.getString(5));
 		return compra;
 	}
 

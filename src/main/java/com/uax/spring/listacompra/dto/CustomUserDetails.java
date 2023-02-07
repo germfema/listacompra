@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
  
-	private User user;
+	private UsuarioDTO user;
      
-    public CustomUserDetails(User user) {
+    public CustomUserDetails(UsuarioDTO user) {
         this.user = user;
     }
  
@@ -23,10 +23,6 @@ public class CustomUserDetails implements UserDetails {
         return user.getPassword();
     }
  
-    @Override
-    public String getUsername() {
-        return user.getEmail();
-    }
  
     @Override
     public boolean isAccountNonExpired() {
@@ -47,9 +43,12 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-     
-    public String getFullName() {
-        return user.getFirstName() + " " + user.getLastName();
-    }
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
  
 }

@@ -27,8 +27,31 @@ public class CompraRepository implements ICompraRepository {
 		try {
 
 			String sql = String.format(
-					"INSERT INTO Compras (descripcion,categoria) VALUES('%s','%d')",
-										compra.getDescripcion(),compra.getCategoria().getId());
+					"INSERT INTO Compras (descripcion,categoria,imagenUrl, enabled) VALUES('%s','%d','%s',1)",
+										compra.getDescripcion(),compra.getCategoria().getId(),compra.getImagenUrl());
+			jdbctemplate.execute(sql);
+		
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public CompraDTO getCompraByDescription(String descripcion) {
+	
+		String sql = String.format("SELECT c.id,c.descripcion,c.categoria,cat.nombre,c.imagenUrl FROM Compras c,categorias cat where c.categoria=cat.id where descripcion='%s'",descripcion);
+		return jdbctemplate.queryForObject(sql, new CompraRowMapper());
+	}
+
+	
+	public boolean updateCompraEnabled(CompraDTO compra) {
+
+		try {
+
+			String sql = String.format(
+					"UPDATE Compras SET enabled=1 WHERE id = %d",
+										compra.getId());
 			jdbctemplate.execute(sql);
 
 		} catch (Exception e) {
@@ -37,7 +60,8 @@ public class CompraRepository implements ICompraRepository {
 
 		return true;
 	}
-
+	
+	
 	@Override
 	public boolean updateCompra(CompraDTO compra) {
 		String sql = String.format("UPDATE Compras SET descripcion='%s' where id='%d'",compra.getDescripcion(),compra.getId());
@@ -48,7 +72,7 @@ public class CompraRepository implements ICompraRepository {
 	@Override
 	public List<CompraDTO> getAllCompras() {
 		
-	return jdbctemplate.query("SELECT * FROM Compras", new CompraRowMapper());
+	return jdbctemplate.query("SELECT c.id,c.descripcion,c.categoria,cat.nombre,c.imagenUrl FROM compras c, categorias cat where c.categoria=cat.id and enabled=1", new CompraRowMapper());
 
 	}
 
@@ -61,7 +85,7 @@ public class CompraRepository implements ICompraRepository {
 
 	@Override
 	public boolean deleteCompra(int id) {
-		String sql = String.format("DELETE FROM Compras where id='%d'",id);
+		String sql = String.format("UPDATE Compras SET enabled=0 where id='%d'",id);
 		jdbctemplate.execute(sql);
 		return true;
 	}

@@ -6,11 +6,9 @@
 </head>
 <body>
 <h3>User Registration</h3>
-<form action="saveUser" method="post">
+<form method="post" th:action="@{/irRegistroUsuario}" th:object="${usuario}">
 <pre>
-Name :    <input type="text" name="name"/>
-
-Email:    <input type="text" name="email"/>
+Name :    <input type="text" name="userName"/>
 
 Password: <input type="password" name="password"/>
 
@@ -18,7 +16,7 @@ Role(s): <input type="checkbox" name="roles" value="Admin"/>Admin
          <input type="checkbox" name="roles" value="Manager"/>Manager
  	 <input type="checkbox" name="roles" value="HR"/>HR
 	 <input type="checkbox" name="roles" value="Employee"/>Employee
-<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
     <input type="submit" value="Register"/>
 
 </pre>
