@@ -1,15 +1,12 @@
 package com.uax.spring.listacompra.controller;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +20,10 @@ import com.google.gson.Gson;
 import com.uax.spring.listacompra.dto.CategoriaDTO;
 import com.uax.spring.listacompra.dto.CompraDTO;
 import com.uax.spring.listacompra.dto.RandomUserDTO.Root;
-import com.uax.spring.listacompra.dto.UsuarioDTO;
 import com.uax.spring.listacompra.repositories.CategoriaRepository;
 import com.uax.spring.listacompra.repositories.CompraRepository;
-import com.uax.spring.listacompra.services.CustomUserDetailsService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class WelcomeController implements ErrorController {
@@ -37,74 +34,55 @@ public class WelcomeController implements ErrorController {
 	@Autowired
 	CategoriaRepository categoriaRepository;
 
-
 	@GetMapping("/index")
 	public String goToIndex(Model model) {
 
 		return "pUsuarios.html";
 	}
-	
-	 // Login form
-	  @RequestMapping("/login")
-	  public String login(Model model) {
-		  UsuarioDTO user = new UsuarioDTO();
-		  model.addAttribute("user", user);
-	    return "login.html";
-	  }
-	  
+
+	// Login form
+	@RequestMapping("/login")
+	public String login(Model model) {
+
+		return "login.html";
+	}
+
 	/**
-	 * Metodo GET para obtener la request 
-	 * y mostrar los resultados de las compras
+	 * Metodo GET para obtener la request y mostrar los resultados de las compras
 	 * 
 	 * @param model
 	 * @return vista a Pantalla Compras
 	 */
 	@Cacheable(value = "compras")
 	@GetMapping("/go-to-lista")
-	public String goToLista(Model model) {
+	public String goToLista(Model model, HttpServletRequest request) {
 
 		List<CompraDTO> compras = compraRepository.getAllCompras();
-		
+
 		model.addAttribute("productos", compras);
 
-//		getRandomUser();
-		
+		//Recupera el nombre del usuario
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
 		model.addAttribute("nombreUser", authentication.getName());
-		
-		Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)    SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-		
-		boolean hasUserRole = authentication.getAuthorities().stream()
-		          .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
-		
-		model.addAttribute("admin", hasUserRole);
-		
-		
+
+		//Comprueba si el rol es admin
+		boolean esAdmin = request.isUserInRole("ROLE_ADMIN");
+		model.addAttribute("admin", esAdmin);
+
+
 		return "pLista";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	private static void getRandomUser()
-	{
-	    final String uri = "https://randomuser.me/api/?results=2";
 
-	    RestTemplate restTemplate = new RestTemplate();
-	    String result = restTemplate.getForObject(uri, String.class);
+	private static void getRandomUser() {
+		final String uri = "https://randomuser.me/api/?results=2";
 
-	    Gson gson = new Gson();
-	    
-	    Root staff = gson.fromJson(result, Root.class);
-	    System.out.println(result);
+		RestTemplate restTemplate = new RestTemplate();
+		String result = restTemplate.getForObject(uri, String.class);
+
+		Gson gson = new Gson();
+
+		Root staff = gson.fromJson(result, Root.class);
+		System.out.println(result);
 	}
 
 	@GetMapping("/add-producto")
@@ -122,28 +100,6 @@ public class WelcomeController implements ErrorController {
 		return "pAddProducto";
 	}
 
-	
-	@GetMapping("/pantallaRegistro")
-	public String goPantallaRegistro(Model model) {
-		
-		UsuarioDTO user = new UsuarioDTO();
-		model.addAttribute("usuario", user);
-		
-		return "registration";
-	}
-	
-	
-	@PostMapping("/irRegistroUsuario")
-	public String realizarRegistro(@ModelAttribute("usuario") UsuarioDTO user) {
-		
-
-		return "registration";
-	}
-	
-	
-	
-	
-	
 	@PostMapping("/add-producto")
 	public String goProductoToList(@ModelAttribute("producto") CompraDTO producto) {
 
@@ -181,21 +137,14 @@ public class WelcomeController implements ErrorController {
 //
 //	}
 //
-	
-	
-	
-	
+
 //	@RequestMapping("/error")
 //	public String showError404Generic(Exception ex) {
 //
 //		return "404error";
 //
 //	}
-	
-	
-	
-	
-	
+
 //
 //	@ExceptionHandler(Exception.class)
 //	public ModelAndView handleException(Exception ex) {

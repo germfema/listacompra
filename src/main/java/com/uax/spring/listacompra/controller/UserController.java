@@ -21,35 +21,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uax.spring.listacompra.dto.UsuarioDTO;
+import com.uax.spring.listacompra.services.UserService;
 
 @RestController
 public class UserController {
 
+
 	@Autowired
-	private JdbcUserDetailsManager jdbcUserDetailsManager;
-
-	@Autowired    
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+	private UserService userService;
 
 	@PostMapping(value = "/registrarUsuario")
 	public ResponseEntity<String> register(@RequestBody UsuarioDTO myUser) {
 		
-		List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(myUser.getRoles()));
-		
-		
-//		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-//		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-//		Authentication authentication = new UsernamePasswordAuthenticationToken(myUser.getUserName(), myUser.getPassword(), authorities);
-//		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-//		
-		String encodededPassword = bCryptPasswordEncoder.encode(myUser.getPassword());
-		
-		User user = new User(myUser.getUserName(), encodededPassword, authorities);
-		
-		jdbcUserDetailsManager.createUser(user);
+		userService.registerUserDB(myUser);
 		
 		return new ResponseEntity<>("OK", HttpStatus.OK);
 	}

@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.uax.spring.listacompra.services.CustomUserDetailsService;
+import com.uax.spring.listacompra.services.UserService;
 
 @EnableWebSecurity
 @Configuration
@@ -28,7 +28,7 @@ public class ListaCompraSecurity {
 
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return new CustomUserDetailsService();
+		return new UserService();
 	}
 	
 	@Bean

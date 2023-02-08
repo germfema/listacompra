@@ -18,12 +18,13 @@
 <div class="collapse navbar-collapse" id="navbarSuapportedContent-4">
 <ul class="navbar-nav ml-auto">
 
+
 <div th:if="${admin}">
-	<li class="nav-item active">
-		<a class="nav-link" th:href="@{/go-to-Recetas}"><i class="fa fa-book"></i> Administrar <span
-				class="sr-only">(current)</span></a>
-	</li>
+<li class="nav-item active">
+<a class="nav-link" th:href="@{/go-to-admin}"><i class="fa fa-book"></i> Administracion <span class="sr-only">(current)</span></a>
+</li>
 </div>
+
 <li class="nav-item active">
 <a class="nav-link" th:href="@{/go-to-Recetas}"><i class="fa fa-book"></i> Recetas <span class="sr-only">(current)</span></a>
 </li>
